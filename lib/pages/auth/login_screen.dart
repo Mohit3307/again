@@ -42,8 +42,9 @@ class LoginScreen extends HookConsumerWidget {
                   controller: email,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(hintText: 'Email'),
-                  validator: (v) =>
-                      (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                  validator: (v) => (v == null || !v.contains('@'))
+                      ? 'Enter a valid email'
+                      : null,
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
@@ -52,9 +53,11 @@ class LoginScreen extends HookConsumerWidget {
                   decoration: InputDecoration(
                     hintText: 'Password',
                     suffixIcon: IconButton(
-                      icon: Icon(obscure.value
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
+                      icon: Icon(
+                        obscure.value
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
                       onPressed: () => obscure.value = !obscure.value,
                     ),
                   ),

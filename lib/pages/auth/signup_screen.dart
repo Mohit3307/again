@@ -43,16 +43,18 @@ class SignupScreen extends HookConsumerWidget {
                 TextFormField(
                   controller: name,
                   decoration: const InputDecoration(hintText: 'Name'),
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Enter your name'
+                      : null,
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: email,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(hintText: 'Email'),
-                  validator: (v) =>
-                      (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                  validator: (v) => (v == null || !v.contains('@'))
+                      ? 'Enter a valid email'
+                      : null,
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
@@ -61,14 +63,17 @@ class SignupScreen extends HookConsumerWidget {
                   decoration: InputDecoration(
                     hintText: 'Password',
                     suffixIcon: IconButton(
-                      icon: Icon(obscure.value
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
+                      icon: Icon(
+                        obscure.value
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
                       onPressed: () => obscure.value = !obscure.value,
                     ),
                   ),
-                  validator: (v) =>
-                      (v == null || v.length < 6) ? 'At least 6 characters' : null,
+                  validator: (v) => (v == null || v.length < 6)
+                      ? 'At least 6 characters'
+                      : null,
                 ),
                 const SizedBox(height: 32),
                 PrimaryButton(
@@ -76,7 +81,9 @@ class SignupScreen extends HookConsumerWidget {
                   loading: isLoading,
                   onPressed: () {
                     if (!formKey.currentState!.validate()) return;
-                    ref.read(authControllerProvider.notifier).signUp(
+                    ref
+                        .read(authControllerProvider.notifier)
+                        .signUp(
                           name.text.trim(),
                           email.text.trim(),
                           password.text,

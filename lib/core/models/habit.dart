@@ -7,6 +7,7 @@ class Habit {
   final String? feature;
   final String? notes;
   final String? reminderTime;
+  final List<int> scheduledDays;
   final List<String> accountabilityContactIds;
   final List<String> completedDates;
 
@@ -26,6 +27,7 @@ class Habit {
     this.feature,
     this.notes,
     this.reminderTime,
+    this.scheduledDays = const [1, 2, 3, 4, 5, 6, 7],
     this.accountabilityContactIds = const [],
     this.completedDates = const [],
     this.sessionLength,
@@ -35,7 +37,9 @@ class Habit {
     this.details,
   });
 
-  factory Habit.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory Habit.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data()!;
 
     return Habit(
@@ -45,10 +49,13 @@ class Habit {
       feature: data['feature'],
       notes: data['notes'],
       reminderTime: data['reminderTime'],
-      accountabilityContactIds: List<String>.from(
-        data['accountabilityContactIds'] ?? [],
+      scheduledDays: List<int>.from(
+        data['scheduledDays'] ?? [1, 2, 3, 4, 5, 6, 7],
       ),
-      completedDates: List<String>.from(data['completedDates'] ?? []),
+      accountabilityContactIds:
+          List<String>.from(data['accountabilityContactIds'] ?? []),
+      completedDates:
+          List<String>.from(data['completedDates'] ?? []),
       sessionLength: data['sessionLength'],
       focusLength: data['focusLength'],
       breakLength: data['breakLength'],
@@ -66,6 +73,7 @@ class Habit {
       'feature': feature,
       'notes': notes,
       'reminderTime': reminderTime,
+      'scheduledDays': scheduledDays,
       'accountabilityContactIds': accountabilityContactIds,
       'completedDates': completedDates,
       'sessionLength': sessionLength,

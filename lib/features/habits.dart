@@ -25,6 +25,14 @@ class HabitController extends _$HabitController {
     await ref.read(habitServiceProvider).addHabit(uid, habit);
   }
 
+  Future<void> updateHabit(String uid, Habit habit) async {
+    await ref.read(habitServiceProvider).updateHabit(uid, habit);
+  }
+
+  Future<void> updateNotes(String uid, String habitId, String? notes) async {
+    await ref.read(habitServiceProvider).updateNotes(uid, habitId, notes);
+  }
+
   Future<void> toggleHabit(
     String uid,
     String habitId,

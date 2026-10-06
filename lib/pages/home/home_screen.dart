@@ -5,9 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:again/core/models/habit.dart';
 import 'package:again/features/auth.dart';
 import 'package:again/features/habits.dart';
+import 'package:again/features/notifications.dart';
 import 'package:again/pages/contacts/contacts_screen.dart';
 import 'package:again/pages/habits/habits_screen.dart';
 import 'package:again/pages/habits/select_habit_type_screen.dart';
+import 'package:again/pages/notifications/notifications_screen.dart';
+import 'package:again/pages/profile/profile_screen.dart';
+import 'package:again/pages/stats/stats_screen.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -15,36 +19,98 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final index = useState(0);
+
     final user = ref.watch(authStateProvider).value;
 
     if (user == null) {
       return const SizedBox();
     }
 
+    final notifications = ref.watch(notificationsProvider(user.uid));
+
+    final unreadCount = notifications.maybeWhen(
+      data: (items) => items.where((item) => item['read'] != true).length,
+      orElse: () => 0,
+    );
+
     final pages = [
       _TodayView(uid: user.uid),
       HabitsScreen(uid: user.uid),
       ContactsScreen(uid: user.uid),
-      const Center(child: Text('Stats')),
+      StatsScreen(uid: user.uid),
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Hi, ${user.displayName ?? 'there'}'),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'logout') {
-                ref.read(authControllerProvider.notifier).signOut();
-              }
-            },
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: 'logout', child: Text('Log out')),
+          // -------------------------------------------------
+          // NOTIFICATIONS
+          // -------------------------------------------------
+
+          Stack(
+            children: [
+              IconButton(
+                tooltip: 'Notifications',
+                icon: const Icon(Icons.notifications_outlined),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationsScreen(uid: user.uid),
+                    ),
+                  );
+                },
+              ),
+
+              if (unreadCount > 0)
+                Positioned(
+                  right: 7,
+                  top: 7,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.error,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      unreadCount > 9 ? '9+' : '$unreadCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
+
+          // -------------------------------------------------
+          // PROFILE
+          // -------------------------------------------------
+          IconButton(
+            tooltip: 'Profile',
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(uid: user.uid),
+                ),
+              );
+            },
+          ),
+
+          const SizedBox(width: 4),
         ],
       ),
+
       body: pages[index.value],
+
       floatingActionButton: index.value == 0 || index.value == 1
           ? FloatingActionButton(
               onPressed: () {
@@ -58,6 +124,7 @@ class HomeScreen extends HookConsumerWidget {
               child: const Icon(Icons.add),
             )
           : null,
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: index.value,
         onDestinationSelected: (value) {
@@ -106,15 +173,23 @@ class _TodayView extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           children: [
             Text('Today', style: Theme.of(context).textTheme.headlineSmall),
+
             const SizedBox(height: 4),
+
             Text(_date()),
+
             const SizedBox(height: 20),
+
             Text('$completed of ${habits.length} completed'),
+
             const SizedBox(height: 8),
+
             LinearProgressIndicator(
               value: habits.isEmpty ? 0 : completed / habits.length,
             ),
+
             const SizedBox(height: 20),
+
             if (habits.isEmpty)
               const Center(child: Text('No habits yet.'))
             else
@@ -159,7 +234,9 @@ class _TodayView extends ConsumerWidget {
       'December',
     ];
 
-    return '${now.day} ${months[now.month - 1]} ${now.year}';
+    return '${now.day} '
+        '${months[now.month - 1]} '
+        '${now.year}';
   }
 }
 
@@ -191,12 +268,14 @@ class _TodayHabit extends ConsumerWidget {
                   .toggleHabit(uid, habit.id, today, value ?? false);
             },
           ),
+
           Expanded(
             child: Text(
               habit.name.isEmpty ? 'Unnamed habit' : habit.name,
               overflow: TextOverflow.ellipsis,
             ),
           ),
+
           if (habit.reminderTime != null)
             Padding(
               padding: const EdgeInsets.only(right: 16),

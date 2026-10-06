@@ -1,48 +1,23 @@
 import 'package:flutter/material.dart';
 
 class HabitSchedule extends StatefulWidget {
-  const HabitSchedule({
-    super.key,
-    required this.onChanged,
-  });
+  const HabitSchedule({super.key, required this.onChanged});
 
-  final void Function(
-    List<int> days,
-    TimeOfDay? time,
-  ) onChanged;
+  final void Function(List<int> days, TimeOfDay? time) onChanged;
 
   @override
   State<HabitSchedule> createState() => _HabitScheduleState();
 }
 
 class _HabitScheduleState extends State<HabitSchedule> {
-  final List<int> _selectedDays = [
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-  ];
+  final List<int> _selectedDays = [1, 2, 3, 4, 5, 6, 7];
 
   TimeOfDay? _time;
 
-  static const days = [
-    'M',
-    'T',
-    'W',
-    'T',
-    'F',
-    'S',
-    'S',
-  ];
+  static const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   void _update() {
-    widget.onChanged(
-      List<int>.from(_selectedDays),
-      _time,
-    );
+    widget.onChanged(List<int>.from(_selectedDays), _time);
   }
 
   @override
@@ -50,10 +25,7 @@ class _HabitScheduleState extends State<HabitSchedule> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Which days?',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text('Which days?', style: Theme.of(context).textTheme.titleMedium),
 
         const SizedBox(height: 12),
 
@@ -84,14 +56,10 @@ class _HabitScheduleState extends State<HabitSchedule> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: _selectedDays.contains(i + 1)
-                            ? Theme.of(context)
-                                .colorScheme
-                                .primary
+                            ? Theme.of(context).colorScheme.primary
                             : Colors.transparent,
                         border: Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -127,12 +95,10 @@ class _HabitScheduleState extends State<HabitSchedule> {
           },
           icon: const Icon(Icons.access_time),
           label: Text(
-            _time == null
-                ? 'Select time'
-                : 'Time: ${_time!.format(context)}',
+            _time == null ? 'Select time' : 'Time: ${_time!.format(context)}',
           ),
         ),
       ],
     );
   }
-}  
+}

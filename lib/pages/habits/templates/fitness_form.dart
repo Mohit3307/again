@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class FitnessForm extends HookWidget {
-  const FitnessForm({
-    super.key,
-    required this.onChanged,
-  });
+  const FitnessForm({super.key, required this.onChanged});
 
   final ValueChanged<Map<String, dynamic>> onChanged;
 
@@ -14,42 +11,29 @@ class FitnessForm extends HookWidget {
     final activity = useState('Gym');
     final runningType = useState('Running');
 
-    final exercises =
-        useState<List<Map<String, dynamic>>>([]);
+    final exercises = useState<List<Map<String, dynamic>>>([]);
 
-    final asanas =
-        useState<List<Map<String, dynamic>>>([]);
+    final asanas = useState<List<Map<String, dynamic>>>([]);
 
-    final distanceController =
-        useTextEditingController();
+    final distanceController = useTextEditingController();
 
-    final durationController =
-        useTextEditingController();
+    final durationController = useTextEditingController();
 
-    final runningTargetController =
-        useTextEditingController();
+    final runningTargetController = useTextEditingController();
 
-    final yogaTargetController =
-        useTextEditingController();
+    final yogaTargetController = useTextEditingController();
 
     void update() {
       if (activity.value == 'Gym') {
-        onChanged({
-          'activity': 'Gym',
-          'exercises': exercises.value,
-        });
+        onChanged({'activity': 'Gym', 'exercises': exercises.value});
       }
 
       if (activity.value == 'Running / Walking') {
         onChanged({
           'activity': 'Running / Walking',
           'type': runningType.value,
-          'distance': double.tryParse(
-            distanceController.text.trim(),
-          ),
-          'duration': int.tryParse(
-            durationController.text.trim(),
-          ),
+          'distance': double.tryParse(distanceController.text.trim()),
+          'duration': int.tryParse(durationController.text.trim()),
           'target': runningTargetController.text.trim(),
         });
       }
@@ -66,12 +50,7 @@ class FitnessForm extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Fitness',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium,
-        ),
+        Text('Fitness', style: Theme.of(context).textTheme.titleMedium),
 
         const SizedBox(height: 12),
 
@@ -82,18 +61,12 @@ class FitnessForm extends HookWidget {
             border: OutlineInputBorder(),
           ),
           items: const [
-            DropdownMenuItem(
-              value: 'Gym',
-              child: Text('Gym'),
-            ),
+            DropdownMenuItem(value: 'Gym', child: Text('Gym')),
             DropdownMenuItem(
               value: 'Running / Walking',
               child: Text('Running / Walking'),
             ),
-            DropdownMenuItem(
-              value: 'Yoga',
-              child: Text('Yoga'),
-            ),
+            DropdownMenuItem(value: 'Yoga', child: Text('Yoga')),
           ],
           onChanged: (value) {
             if (value != null) {
@@ -142,10 +115,7 @@ class FitnessForm extends HookWidget {
 // ------------------------------------------------------------
 
 class _GymForm extends StatelessWidget {
-  const _GymForm({
-    required this.exercises,
-    required this.onChanged,
-  });
+  const _GymForm({required this.exercises, required this.onChanged});
 
   final List<Map<String, dynamic>> exercises;
   final ValueChanged<List<Map<String, dynamic>>> onChanged;
@@ -153,15 +123,9 @@ class _GymForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Exercises',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium,
-        ),
+        Text('Exercises', style: Theme.of(context).textTheme.titleMedium),
 
         const SizedBox(height: 8),
 
@@ -175,12 +139,9 @@ class _GymForm extends StatelessWidget {
                 '${exercises[i]['weight']} kg',
               ),
               trailing: IconButton(
-                icon: const Icon(
-                  Icons.delete_outline,
-                ),
+                icon: const Icon(Icons.delete_outline),
                 onPressed: () {
-                  final list = [...exercises]
-                    ..removeAt(i);
+                  final list = [...exercises]..removeAt(i);
 
                   onChanged(list);
                 },
@@ -190,14 +151,10 @@ class _GymForm extends StatelessWidget {
 
         OutlinedButton.icon(
           onPressed: () async {
-            final exercise =
-                await _showExerciseDialog(context);
+            final exercise = await _showExerciseDialog(context);
 
             if (exercise != null) {
-              onChanged([
-                ...exercises,
-                exercise,
-              ]);
+              onChanged([...exercises, exercise]);
             }
           },
           icon: const Icon(Icons.add),
@@ -225,46 +182,30 @@ class _GymForm extends StatelessWidget {
             children: [
               TextField(
                 controller: name,
-                decoration:
-                    const InputDecoration(
-                  labelText: 'Exercise name',
-                ),
+                decoration: const InputDecoration(labelText: 'Exercise name'),
               ),
               TextField(
                 controller: sets,
-                keyboardType:
-                    TextInputType.number,
-                decoration:
-                    const InputDecoration(
-                  labelText: 'Sets',
-                ),
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Sets'),
               ),
               TextField(
                 controller: reps,
-                keyboardType:
-                    TextInputType.number,
-                decoration:
-                    const InputDecoration(
-                  labelText: 'Reps',
-                ),
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Reps'),
               ),
               TextField(
                 controller: weight,
-                keyboardType:
-                    const TextInputType.numberWithOptions(
+                keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration:
-                    const InputDecoration(
-                  labelText: 'Weight (kg)',
-                ),
+                decoration: const InputDecoration(labelText: 'Weight (kg)'),
               ),
             ],
           ),
           actions: [
             TextButton(
-              onPressed: () =>
-                  Navigator.pop(context),
+              onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
             TextButton(
@@ -273,21 +214,12 @@ class _GymForm extends StatelessWidget {
                   return;
                 }
 
-                Navigator.pop(
-                  context,
-                  {
-                    'name': name.text.trim(),
-                    'sets':
-                        int.tryParse(sets.text) ?? 0,
-                    'reps':
-                        int.tryParse(reps.text) ?? 0,
-                    'weight':
-                        double.tryParse(
-                              weight.text,
-                            ) ??
-                            0,
-                  },
-                );
+                Navigator.pop(context, {
+                  'name': name.text.trim(),
+                  'sets': int.tryParse(sets.text) ?? 0,
+                  'reps': int.tryParse(reps.text) ?? 0,
+                  'weight': double.tryParse(weight.text) ?? 0,
+                });
               },
               child: const Text('Add'),
             ),
@@ -328,14 +260,8 @@ class _RunningForm extends StatelessWidget {
             border: OutlineInputBorder(),
           ),
           items: const [
-            DropdownMenuItem(
-              value: 'Running',
-              child: Text('Running'),
-            ),
-            DropdownMenuItem(
-              value: 'Walking',
-              child: Text('Walking'),
-            ),
+            DropdownMenuItem(value: 'Running', child: Text('Running')),
+            DropdownMenuItem(value: 'Walking', child: Text('Walking')),
           ],
           onChanged: (value) {
             if (value != null) {
@@ -349,10 +275,7 @@ class _RunningForm extends StatelessWidget {
 
         TextField(
           controller: distanceController,
-          keyboardType:
-              const TextInputType.numberWithOptions(
-            decimal: true,
-          ),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onChanged: (_) => onChanged(),
           decoration: const InputDecoration(
             labelText: 'Distance (km)',
@@ -364,8 +287,7 @@ class _RunningForm extends StatelessWidget {
 
         TextField(
           controller: durationController,
-          keyboardType:
-              TextInputType.number,
+          keyboardType: TextInputType.number,
           onChanged: (_) => onChanged(),
           decoration: const InputDecoration(
             labelText: 'Duration (minutes)',
@@ -406,15 +328,9 @@ class _YogaForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Asanas / Poses',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium,
-        ),
+        Text('Asanas / Poses', style: Theme.of(context).textTheme.titleMedium),
 
         const SizedBox(height: 8),
 
@@ -422,16 +338,11 @@ class _YogaForm extends StatelessWidget {
           Card(
             child: ListTile(
               title: Text(asanas[i]['name']),
-              subtitle: Text(
-                '${asanas[i]['duration']} minutes',
-              ),
+              subtitle: Text('${asanas[i]['duration']} minutes'),
               trailing: IconButton(
-                icon: const Icon(
-                  Icons.delete_outline,
-                ),
+                icon: const Icon(Icons.delete_outline),
                 onPressed: () {
-                  final list = [...asanas]
-                    ..removeAt(i);
+                  final list = [...asanas]..removeAt(i);
 
                   onChanged(list);
                 },
@@ -441,14 +352,10 @@ class _YogaForm extends StatelessWidget {
 
         OutlinedButton.icon(
           onPressed: () async {
-            final asana =
-                await _showAsanaDialog(context);
+            final asana = await _showAsanaDialog(context);
 
             if (asana != null) {
-              onChanged([
-                ...asanas,
-                asana,
-              ]);
+              onChanged([...asanas, asana]);
             }
           },
           icon: const Icon(Icons.add),
@@ -471,9 +378,7 @@ class _YogaForm extends StatelessWidget {
     );
   }
 
-  Future<Map<String, dynamic>?> _showAsanaDialog(
-    BuildContext context,
-  ) async {
+  Future<Map<String, dynamic>?> _showAsanaDialog(BuildContext context) async {
     final name = TextEditingController();
     final duration = TextEditingController();
 
@@ -493,8 +398,7 @@ class _YogaForm extends StatelessWidget {
               ),
               TextField(
                 controller: duration,
-                keyboardType:
-                    TextInputType.number,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Duration (minutes)',
                 ),
@@ -503,8 +407,7 @@ class _YogaForm extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () =>
-                  Navigator.pop(context),
+              onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
             TextButton(
@@ -513,17 +416,10 @@ class _YogaForm extends StatelessWidget {
                   return;
                 }
 
-                Navigator.pop(
-                  context,
-                  {
-                    'name': name.text.trim(),
-                    'duration':
-                        int.tryParse(
-                              duration.text,
-                            ) ??
-                            0,
-                  },
-                );
+                Navigator.pop(context, {
+                  'name': name.text.trim(),
+                  'duration': int.tryParse(duration.text) ?? 0,
+                });
               },
               child: const Text('Add'),
             ),

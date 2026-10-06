@@ -37,9 +37,7 @@ class Habit {
     this.details,
   });
 
-  factory Habit.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> doc,
-  ) {
+  factory Habit.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
 
     return Habit(
@@ -52,10 +50,10 @@ class Habit {
       scheduledDays: List<int>.from(
         data['scheduledDays'] ?? [1, 2, 3, 4, 5, 6, 7],
       ),
-      accountabilityContactIds:
-          List<String>.from(data['accountabilityContactIds'] ?? []),
-      completedDates:
-          List<String>.from(data['completedDates'] ?? []),
+      accountabilityContactIds: List<String>.from(
+        data['accountabilityContactIds'] ?? [],
+      ),
+      completedDates: List<String>.from(data['completedDates'] ?? []),
       sessionLength: data['sessionLength'],
       focusLength: data['focusLength'],
       breakLength: data['breakLength'],

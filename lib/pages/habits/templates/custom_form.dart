@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomForm extends StatelessWidget {
-  const CustomForm({
-    super.key,
-    required this.controller,
-  });
+  const CustomForm({super.key, required this.controller});
 
   final TextEditingController controller;
 
@@ -13,12 +10,7 @@ class CustomForm extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Custom',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium,
-        ),
+        Text('Custom', style: Theme.of(context).textTheme.titleMedium),
 
         const SizedBox(height: 12),
 

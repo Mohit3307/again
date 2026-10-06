@@ -21,10 +21,7 @@ class AccountabilityPicker extends StatelessWidget {
         final result = await showDialog<List<String>>(
           context: context,
           builder: (context) {
-            return _ContactDialog(
-              contacts: contacts,
-              selectedIds: selectedIds,
-            );
+            return _ContactDialog(contacts: contacts, selectedIds: selectedIds);
           },
         );
 
@@ -43,10 +40,7 @@ class AccountabilityPicker extends StatelessWidget {
 }
 
 class _ContactDialog extends StatefulWidget {
-  const _ContactDialog({
-    required this.contacts,
-    required this.selectedIds,
-  });
+  const _ContactDialog({required this.contacts, required this.selectedIds});
 
   final List<Contact> contacts;
   final List<String> selectedIds;
@@ -56,9 +50,7 @@ class _ContactDialog extends StatefulWidget {
 }
 
 class _ContactDialogState extends State<_ContactDialog> {
-  late final List<String> selectedIds = [
-    ...widget.selectedIds,
-  ];
+  late final List<String> selectedIds = [...widget.selectedIds];
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +90,7 @@ class _ContactDialogState extends State<_ContactDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(
-              context,
-              selectedIds,
-            );
+            Navigator.pop(context, selectedIds);
           },
           child: const Text('Done'),
         ),

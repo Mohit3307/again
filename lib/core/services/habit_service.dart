@@ -19,6 +19,16 @@ class HabitService {
     await _habits(uid).add(habit.toFirestore());
   }
 
+  Future<void> updateHabit(String uid, Habit habit) async {
+    await _habits(uid)
+        .doc(habit.id)
+        .update(habit.toFirestore()..remove('createdAt'));
+  }
+
+  Future<void> updateNotes(String uid, String habitId, String? notes) async {
+    await _habits(uid).doc(habitId).update({'notes': notes});
+  }
+
   Future<void> toggleHabit(
     String uid,
     String habitId,

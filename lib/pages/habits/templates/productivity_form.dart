@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ProductivityForm extends HookWidget {
-  const ProductivityForm({
-    super.key,
-    required this.onChanged,
-  });
+  const ProductivityForm({super.key, required this.onChanged});
 
   final ValueChanged<Map<String, dynamic>> onChanged;
 
@@ -13,57 +10,36 @@ class ProductivityForm extends HookWidget {
   Widget build(BuildContext context) {
     final feature = useState<String?>(null);
 
-    final sessionController =
-        useTextEditingController();
+    final sessionController = useTextEditingController();
 
-    final focusController =
-        useTextEditingController();
+    final focusController = useTextEditingController();
 
-    final breakController =
-        useTextEditingController();
+    final breakController = useTextEditingController();
 
-    final cyclesController =
-        useTextEditingController();
+    final cyclesController = useTextEditingController();
 
     void update() {
       onChanged({
         'feature': feature.value,
-        'sessionLength':
-            feature.value == 'Focus Session'
-                ? int.tryParse(
-                    sessionController.text.trim(),
-                  )
-                : null,
-        'focusLength':
-            feature.value == 'Pomodoro'
-                ? int.tryParse(
-                    focusController.text.trim(),
-                  )
-                : null,
-        'breakLength':
-            feature.value == 'Pomodoro'
-                ? int.tryParse(
-                    breakController.text.trim(),
-                  )
-                : null,
-        'cycles':
-            feature.value == 'Pomodoro'
-                ? int.tryParse(
-                    cyclesController.text.trim(),
-                  )
-                : null,
+        'sessionLength': feature.value == 'Focus Session'
+            ? int.tryParse(sessionController.text.trim())
+            : null,
+        'focusLength': feature.value == 'Pomodoro'
+            ? int.tryParse(focusController.text.trim())
+            : null,
+        'breakLength': feature.value == 'Pomodoro'
+            ? int.tryParse(breakController.text.trim())
+            : null,
+        'cycles': feature.value == 'Pomodoro'
+            ? int.tryParse(cyclesController.text.trim())
+            : null,
       });
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Productivity',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium,
-        ),
+        Text('Productivity', style: Theme.of(context).textTheme.titleMedium),
 
         const SizedBox(height: 12),
 
@@ -78,10 +54,7 @@ class ProductivityForm extends HookWidget {
               value: 'Focus Session',
               child: Text('Focus Session'),
             ),
-            DropdownMenuItem(
-              value: 'Pomodoro',
-              child: Text('Pomodoro'),
-            ),
+            DropdownMenuItem(value: 'Pomodoro', child: Text('Pomodoro')),
           ],
           onChanged: (value) {
             feature.value = value;

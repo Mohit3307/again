@@ -15,140 +15,79 @@ import 'package:again/pages/habits/widgets/accountability_picker.dart';
 import 'package:again/pages/habits/widgets/habit_schedule.dart';
 
 class CreateHabitScreen extends HookConsumerWidget {
-  const CreateHabitScreen({
-    super.key,
-    required this.type,
-  });
+  const CreateHabitScreen({super.key, required this.type});
 
   final String type;
 
   @override
-  Widget build(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
-    final nameController =
-        useTextEditingController();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final nameController = useTextEditingController();
 
-    final notesController =
-        useTextEditingController();
+    final notesController = useTextEditingController();
 
-    final customTargetController =
-        useTextEditingController();
+    final customTargetController = useTextEditingController();
 
-    final templateDetails =
-        useState<Map<String, dynamic>?>(null);
+    final templateDetails = useState<Map<String, dynamic>?>(null);
 
-    final healthDuration =
-        useState('30 days');
+    final healthDuration = useState('30 days');
 
-    final scheduledDays =
-        useState<List<int>>([
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-    ]);
+    final scheduledDays = useState<List<int>>([1, 2, 3, 4, 5, 6, 7]);
 
-    final selectedTime =
-        useState<TimeOfDay?>(null);
+    final selectedTime = useState<TimeOfDay?>(null);
 
-    final selectedContacts =
-        useState<List<String>>([]);
+    final selectedContacts = useState<List<String>>([]);
 
-    final uid =
-        ref.read(authServiceProvider)
-            .currentUser
-            ?.uid;
+    final uid = ref.read(authServiceProvider).currentUser?.uid;
 
     if (uid == null) {
       return const Scaffold(
-        body: Center(
-          child: Text('You are not logged in.'),
-        ),
+        body: Center(child: Text('You are not logged in.')),
       );
     }
 
-    final contacts =
-        ref.watch(contactsProvider(uid));
+    final contacts = ref.watch(contactsProvider(uid));
 
     Future<void> saveHabit() async {
-      if (nameController.text
-          .trim()
-          .isEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(
-          const SnackBar(
-            content:
-                Text('Please enter a habit name.'),
-          ),
+      if (nameController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a habit name.')),
         );
         return;
       }
 
-      final details =
-          templateDetails.value;
+      final details = templateDetails.value;
 
       final habit = Habit(
         id: '',
         name: nameController.text.trim(),
         type: type,
         feature: details?['feature'],
-        notes:
-            notesController.text.trim().isEmpty
-                ? null
-                : notesController.text.trim(),
+        notes: notesController.text.trim().isEmpty
+            ? null
+            : notesController.text.trim(),
 
-        reminderTime:
-            selectedTime.value?.format(
-          context,
-        ),
+        reminderTime: selectedTime.value?.format(context),
 
-        scheduledDays:
-            scheduledDays.value,
+        scheduledDays: scheduledDays.value,
 
-        accountabilityContactIds:
-            selectedContacts.value,
+        accountabilityContactIds: selectedContacts.value,
 
-        sessionLength:
-            details?['sessionLength'],
+        sessionLength: details?['sessionLength'],
 
-        focusLength:
-            details?['focusLength'],
+        focusLength: details?['focusLength'],
 
-        breakLength:
-            details?['breakLength'],
+        breakLength: details?['breakLength'],
 
-        cycles:
-            details?['cycles'],
+        cycles: details?['cycles'],
 
         details: type == 'Health'
-            ? {
-                'duration':
-                    healthDuration.value,
-              }
+            ? {'duration': healthDuration.value}
             : type == 'Custom'
-                ? {
-                    'target':
-                        customTargetController
-                            .text
-                            .trim(),
-                  }
-                : details,
+            ? {'target': customTargetController.text.trim()}
+            : details,
       );
 
-      await ref
-          .read(
-            habitControllerProvider
-                .notifier,
-          )
-          .addHabit(
-            uid,
-            habit,
-          );
+      await ref.read(habitControllerProvider.notifier).addHabit(uid, habit);
 
       if (context.mounted) {
         // Back to Select Habit Type.
@@ -160,41 +99,28 @@ class CreateHabitScreen extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Create $type Habit',
-        ),
-      ),
+      appBar: AppBar(title: Text('Create $type Habit')),
 
       body: ListView(
-        padding:
-            const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
 
         children: [
           TextField(
-            controller:
-                nameController,
-            decoration:
-                const InputDecoration(
-              labelText:
-                  'Habit name',
-              border:
-                  OutlineInputBorder(),
+            controller: nameController,
+            decoration: const InputDecoration(
+              labelText: 'Habit name',
+              border: OutlineInputBorder(),
             ),
           ),
 
           const SizedBox(height: 16),
 
           TextField(
-            controller:
-                notesController,
+            controller: notesController,
             maxLines: 2,
-            decoration:
-                const InputDecoration(
-              labelText:
-                  'Notes (optional)',
-              border:
-                  OutlineInputBorder(),
+            decoration: const InputDecoration(
+              labelText: 'Notes (optional)',
+              border: OutlineInputBorder(),
             ),
           ),
 
@@ -203,78 +129,51 @@ class CreateHabitScreen extends HookConsumerWidget {
           if (type == 'Productivity')
             ProductivityForm(
               onChanged: (value) {
-                templateDetails
-                    .value = value;
+                templateDetails.value = value;
               },
             ),
 
           if (type == 'Fitness')
             FitnessForm(
               onChanged: (value) {
-                templateDetails
-                    .value = value;
+                templateDetails.value = value;
               },
             ),
 
           if (type == 'Health')
             HealthForm(
               onChanged: (value) {
-                healthDuration
-                    .value = value;
+                healthDuration.value = value;
               },
             ),
 
-          if (type == 'Custom')
-            CustomForm(
-              controller:
-                  customTargetController,
-            ),
+          if (type == 'Custom') CustomForm(controller: customTargetController),
 
           const SizedBox(height: 28),
 
           HabitSchedule(
-            onChanged: (
-              days,
-              time,
-            ) {
-              scheduledDays
-                  .value = days;
+            onChanged: (days, time) {
+              scheduledDays.value = days;
 
-              selectedTime
-                  .value = time;
+              selectedTime.value = time;
             },
           ),
 
           const SizedBox(height: 20),
 
           contacts.when(
-            loading: () =>
-                const Center(
-              child:
-                  CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
 
-            error: (
-              error,
-              stackTrace,
-            ) =>
-                const Text(
-              'Could not load contacts.',
-            ),
+            error: (error, stackTrace) =>
+                const Text('Could not load contacts.'),
 
-            data: (
-              contactList,
-            ) =>
-                AccountabilityPicker(
-              contacts:
-                  contactList,
+            data: (contactList) => AccountabilityPicker(
+              contacts: contactList,
 
-              selectedIds:
-                  selectedContacts.value,
+              selectedIds: selectedContacts.value,
 
               onChanged: (ids) {
-                selectedContacts
-                    .value = ids;
+                selectedContacts.value = ids;
               },
             ),
           ),
@@ -284,12 +183,8 @@ class CreateHabitScreen extends HookConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed:
-                  saveHabit,
-              child:
-                  const Text(
-                'Create Habit',
-              ),
+              onPressed: saveHabit,
+              child: const Text('Create Habit'),
             ),
           ),
         ],

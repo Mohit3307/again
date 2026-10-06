@@ -3,14 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:again/firebase_options.dart';
+import 'package:again/core/services/notification_service.dart';
 import 'package:again/features/auth.dart';
 import 'package:again/pages/auth/login_screen.dart';
-import 'package:again/pages/home/home_screen.dart'; // NEW
+import 'package:again/pages/home/home_screen.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await NotificationService.instance.initialize();
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -42,13 +45,13 @@ class AuthGate extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
 
     return authState.when(
-      data: (user) =>
-          user == null ? const LoginScreen() : const HomeScreen(), // CHANGED
+      data: (user) => user == null ? const LoginScreen() : const HomeScreen(),
 
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
 
-      error: (e, st) => Scaffold(body: Center(child: Text('Error: $e'))),
+      error: (error, stackTrace) =>
+          Scaffold(body: Center(child: Text('Error: $error'))),
     );
   }
 }

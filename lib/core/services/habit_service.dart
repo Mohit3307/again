@@ -10,22 +10,29 @@ class HabitService {
 
   Stream<List<Habit>> getHabits(String uid) {
     return _habits(uid).snapshots().map(
-      (snapshot) =>
-          snapshot.docs.map((doc) => Habit.fromFirestore(doc)).toList(),
-    );
+          (snapshot) => snapshot.docs
+              .map((doc) => Habit.fromFirestore(doc))
+              .toList(),
+        );
   }
 
-  Future<void> addHabit(String uid, Habit habit) async {
-    await _habits(uid).add(habit.toFirestore());
+  Future<String> addHabit(String uid, Habit habit) async {
+    final doc = await _habits(uid).add(habit.toFirestore());
+    return doc.id;
   }
 
   Future<void> updateHabit(String uid, Habit habit) async {
-    await _habits(uid)
-        .doc(habit.id)
-        .update(habit.toFirestore()..remove('createdAt'));
+    final data = habit.toFirestore();
+    data.remove('createdAt');
+
+    await _habits(uid).doc(habit.id).update(data);
   }
 
-  Future<void> updateNotes(String uid, String habitId, String? notes) async {
+  Future<void> updateNotes(
+    String uid,
+    String habitId,
+    String? notes,
+  ) async {
     await _habits(uid).doc(habitId).update({'notes': notes});
   }
 

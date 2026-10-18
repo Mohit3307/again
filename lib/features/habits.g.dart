@@ -48,7 +48,7 @@ final class HabitServiceProvider
   }
 }
 
-String _$habitServiceHash() => r'be4226255f47c769075b5b0f65bc48ad8c787e3a';
+String _$habitServiceHash() => r'6145545ec538764bae0afaa1e486349d30ef8ed1';
 
 @ProviderFor(habits)
 final habitsProvider = HabitsFamily._();
@@ -149,7 +149,7 @@ final class HabitControllerProvider
   HabitController create() => HabitController();
 }
 
-String _$habitControllerHash() => r'110896b3b1bd90d7150176b3f23298f1281fd1cd';
+String _$habitControllerHash() => r'665c3da50bd54dce3a420a391cb539c2978c4648';
 
 abstract class _$HabitController extends $AsyncNotifier<void> {
   FutureOr<void> build();
